@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>잔반 Zero & 냉장고 지도</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Noto Sans KR) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        emerald: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            200: '#a7f3d0',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f8fafc; }
+        .pulse-gentle { animation: pulse 2.5s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    </style>
+</head>
+<body class="text-slate-800 bg-slate-50 min-h-screen flex flex-col justify-between">
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-emerald-100 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white shadow-md shadow-emerald-200">
+                    <i class="fa-solid fa-leaf text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold text-slate-800 leading-tight">잔반 Zero & 냉장고 지도</h1>
+                    <p class="text-xs text-emerald-600 font-medium">우리 집 & 우리 학교 환경 실천 웹</p>
+                </div>
+            </div>
+
+            <!-- Profile & Point Summary -->
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                <div class="hidden sm:flex flex-col text-right">
+                    <span id="user-class" class="text-xs text-slate-500 font-medium">1학년 2반</span>
+                    <span id="user-name" class="text-sm font-bold text-slate-800">홍길동 학생</span>
+                </div>
+                <div class="bg-amber-50 border border-amber-200 rounded-full px-3 py-1 flex items-center space-x-1.5">
+                    <i class="fa-solid fa-coins text-amber-500 text-sm"></i>
+                    <span id="user-points" class="font-bold text-slate-700 text-sm">350</span>
+                    <span class="text-xs text-slate-500">P</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-6xl mx-auto px-4 py-6 w-full flex-grow space-y-6">
+
+        <!-- Tab 1 Header: Impact Dashboard -->
+        <section class="bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center relative z-10">
+                <div class="md:col-span-4 flex flex-col items-center justify-center text-center p-4 bg-white/5 rounded-2xl border border-white/10">
+                    <div class="w-20 h-20 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 text-4xl mb-3 pulse-gentle">
+                        <i class="fa-solid fa-tree"></i>
+                    </div>
+                    <span class="text-xs text-emerald-300 font-semibold uppercase tracking-wider">나의 온실가스 감축 성과</span>
+                    <h2 class="text-2xl font-black mt-1"><span id="dash-co2">5.35</span> kg CO₂</h2>
+                    <p class="text-xs text-slate-300 mt-1">배출 감축 성공!</p>
+                </div>
+
+                <div class="md:col-span-8 grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    <div class="bg-slate-800/80 border border-slate-700 p-4 rounded-2xl">
+                        <div class="text-emerald-400 text-xs font-semibold flex items-center justify-between mb-2">
+                            <span>절감 잔반</span>
+                            <i class="fa-solid fa-dumpster"></i>
+                        </div>
+                        <div class="text-2xl font-extrabold"><span id="dash-food-kg">2.50</span> <span class="text-xs text-slate-400 font-normal">kg</span></div>
+                        <p class="text-[10px] text-slate-400 mt-1">음식물 쓰레기 단축</p>
+                    </div>
+
+                    <div class="bg-slate-800/80 border border-slate-700 p-4 rounded-2xl">
+                        <div class="text-emerald-400 text-xs font-semibold flex items-center justify-between mb-2">
+                            <span>소나무 식재 효과</span>
+                            <i class="fa-solid fa-seedling"></i>
+                        </div>
+                        <div class="text-2xl font-extrabold"><span id="dash-trees">0.81</span> <span class="text-xs text-slate-400 font-normal">그루</span></div>
+                        <p class="text-[10px] text-slate-400 mt-1">소나무 CO₂ 흡수량 기준</p>
+                    </div>
+
+                    <div class="bg-slate-800/80 border border-slate-700 p-4 rounded-2xl col-span-2 sm:col-span-1">
+                        <div class="text-amber-400 text-xs font-semibold flex items-center justify-between mb-2">
+                            <span>급식 인증 횟수</span>
+                            <i class="fa-solid fa-award"></i>
+                        </div>
+                        <div class="text-2xl font-extrabold"><span id="dash-cert-count">3</span> <span class="text-xs text-slate-400 font-normal">회</span></div>
+                        <p class="text-[10px] text-slate-400 mt-1">잔반 Zero 성공</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation Tabs -->
+        <nav class="flex border-b border-slate-200 bg-white rounded-2xl p-1.5 shadow-sm space-x-1">
+            <button id="tab-btn-fridge" onclick="switchTab('fridge')" class="tab-btn flex-1 py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center space-x-2 transition-all bg-emerald-600 text-white shadow-sm">
+                <i class="fa-solid fa-refrigerator"></i>
+                <span>[가정] 냉장고 지도</span>
+            </button>
+            <button id="tab-btn-school" onclick="switchTab('school')" class="tab-btn flex-1 py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center space-x-2 transition-all text-slate-600 hover:bg-slate-100">
+                <i class="fa-solid fa-school"></i>
+                <span>[학교] 급식 챌린지</span>
+            </button>
+            <button id="tab-btn-recipe" onclick="switchTab('recipe')" class="tab-btn flex-1 py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center space-x-2 transition-all text-slate-600 hover:bg-slate-100">
+                <i class="fa-solid fa-utensils"></i>
+                <span>자투리 레시피</span>
+            </button>
+        </nav>
+
+        <!-- TAB 1: 냉장고 지도 -->
+        <section id="tab-fridge" class="tab-content space-y-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-800">냉장고 식재료 현황</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">소비기한 신호등 알림: 🔴 위험(D-2 이하) | 🟡 주의(D-5 이하) | 🟢 여유(D-6 이상)</p>
+                </div>
+                <button onclick="openAddModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2.5 rounded-xl text-xs sm:text-sm transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-plus"></i> 식재료 추가
+                </button>
+            </div>
+
+            <!-- Category Filter Buttons -->
+            <div class="flex flex-wrap gap-2 text-xs">
+                <button onclick="filterFridge('all')" class="filter-btn bg-emerald-100 text-emerald-800 font-bold px-3 py-1.5 rounded-lg">전체 보기</button>
+                <button onclick="filterFridge('vegetable')" class="filter-btn bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium px-3 py-1.5 rounded-lg">🥬 채소</button>
+                <button onclick="filterFridge('meat')" class="filter-btn bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium px-3 py-1.5 rounded-lg">🥩 육류</button>
+                <button onclick="filterFridge('dairy')" class="filter-btn bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium px-3 py-1.5 rounded-lg">🥛 다이어리/유제품</button>
+                <button onclick="filterFridge('etc')" class="filter-btn bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium px-3 py-1.5 rounded-lg">🥫 기타</button>
+            </div>
+
+            <!-- Fridge Items Cards Grid -->
+            <div id="fridge-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Dynamic Content via JS -->
+            </div>
+        </section>
+
+        <!-- TAB 2: 급식 잔반 Zero 챌린지 -->
+        <section id="tab-school" class="tab-content hidden space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                <!-- Today's Meal & Certification -->
+                <div class="md:col-span-7 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-utensils text-emerald-600 text-lg"></i>
+                            <h3 class="font-bold text-slate-800 text-base">오늘의 학교 급식 메뉴</h3>
+                        </div>
+                        <span id="current-date-text" class="text-xs text-slate-500 font-medium">2026.10.26 (월)</span>
+                    </div>
+
+                    <!-- Cafeteria Menu Box -->
+                    <div class="bg-emerald-50/60 border border-emerald-100 rounded-2xl p-4 text-xs text-slate-700 space-y-2">
+                        <div class="font-bold text-emerald-900 text-sm mb-1">🍱 중식 메뉴</div>
+                        <div class="grid grid-cols-2 gap-2 font-medium">
+                            <div>• 발아현미밥</div>
+                            <div>• 쇠고기 미역국</div>
+                            <div>• 제육볶음</div>
+                            <div>• 계란말이</div>
+                            <div>• 친환경 깍두기</div>
+                            <div>• 유기농 귤</div>
+                        </div>
+                    </div>
+
+                    <!-- Certification Action Card -->
+                    <div class="border border-dashed border-slate-300 rounded-2xl p-5 text-center space-y-3 bg-slate-50">
+                        <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-xl">
+                            <i class="fa-solid fa-camera"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-sm">잔반 없는 클린 식판 인증</h4>
+                            <p class="text-xs text-slate-500 mt-0.5">잔반 없이 깔끔하게 비운 식판 사진을 인증하면 +50P를 드립니다!</p>
+                        </div>
+                        <button id="cert-btn" onclick="certifyMeal()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded-xl text-xs transition-all shadow-sm">
+                            잔반 Zero 인증 완료하기 (+50P)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Class Leaderboard -->
+                <div class="md:col-span-5 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-trophy text-amber-500 text-lg"></i>
+                            <h3 class="font-bold text-slate-800 text-base">우리 반 잔반 Zero 랭킹</h3>
+                        </div>
+                        <span class="text-[11px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-bold">이번 주 학급 경쟁</span>
+                    </div>
+
+                    <div class="space-y-3 text-xs">
+                        <!-- Rank 1 -->
+                        <div class="flex items-center justify-between p-3 rounded-xl bg-amber-50/70 border border-amber-200">
+                            <div class="flex items-center space-x-3">
+                                <span class="font-black text-amber-600 text-base">1</span>
+                                <span class="font-bold text-slate-800">1학년 2반 (우리반)</span>
+                            </div>
+                            <span class="font-bold text-amber-700">참여율 92%</span>
+                        </div>
+                        <!-- Rank 2 -->
+                        <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200">
+                            <div class="flex items-center space-x-3">
+                                <span class="font-black text-slate-400 text-base">2</span>
+                                <span class="font-bold text-slate-700">1학년 5반</span>
+                            </div>
+                            <span class="font-bold text-slate-600">참여율 85%</span>
+                        </div>
+                        <!-- Rank 3 -->
+                        <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200">
+                            <div class="flex items-center space-x-3">
+                                <span class="font-black text-slate-400 text-base">3</span>
+                                <span class="font-bold text-slate-700">1학년 1반</span>
+                            </div>
+                            <span class="font-bold text-slate-600">참여율 78%</span>
+                        </div>
+                        <!-- Rank 4 -->
+                        <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200">
+                            <div class="flex items-center space-x-3">
+                                <span class="font-black text-slate-400 text-base">4</span>
+                                <span class="font-bold text-slate-700">1학년 3반</span>
+                            </div>
+                            <span class="font-bold text-slate-600">참여율 64%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: 자투리 레시피 -->
+        <section id="tab-recipe" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-800">냉장고 속 남은 재료 요리 레시피</h3>
+                        <p class="text-xs text-slate-500">소비기한이 얼마 남지 않은 식재료를 선택하여 알뜰 레시피를 찾아보세요.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-2">
+                    <input type="text" id="recipe-input" placeholder="예: 우유, 대파, 자투리 두부" class="flex-1 border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <button onclick="getRecipe()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-magnifying-glass"></i> 레시피 추천
+                    </button>
+                </div>
+
+                <div id="recipe-result" class="mt-4">
+                    <div class="border border-slate-200 bg-slate-50 rounded-2xl p-6 text-center text-slate-500 text-xs">
+                        식재료를 입력하거나 냉장고 목록에서 선택하면 잔반 Zero 맞춤 요리법이 표시됩니다.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal for Adding Ingredient -->
+    <div id="add-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 class="font-bold text-slate-800 text-base">새 식재료 등록</h3>
+                <button onclick="closeAddModal()" class="text-slate-400 hover:text-slate-600 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="fridge-form" onsubmit="handleAddIngredient(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">식품명</label>
+                    <input type="text" id="input-name" required placeholder="예: 우유, 계란, 양파" class="w-full border border-slate-300 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">카테고리</label>
+                        <select id="input-category" class="w-full border border-slate-300 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                            <option value="dairy">🥛 다이어리/유제품</option>
+                            <option value="vegetable">🥬 채소</option>
+                            <option value="meat">🥩 육류</option>
+                            <option value="etc">🥫 기타</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">보관 장소</label>
+                        <select id="input-storage" class="w-full border border-slate-300 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                            <option value="chilled">냉장 보관</option>
+                            <option value="frozen">냉동 보관</option>
+                            <option value="room">실온 보관</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">소비기한</label>
+                    <input type="date" id="input-date" required class="w-full border border-slate-300 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                </div>
+
+                <div class="pt-2 flex gap-2">
+                    <button type="button" onclick="closeAddModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl transition-all">취소</button>
+                    <button type="submit" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl transition-all">등록하기</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center space-x-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none z-50 border border-slate-700">
+        <div class="w-7 h-7 rounded-full bg-emerald-500 flex items-center justify-center text-white font-bold flex-shrink-0 text-xs">
+            <i class="fa-solid fa-check"></i>
+        </div>
+        <div>
+            <p id="toast-title" class="font-bold text-xs">알림</p>
+            <p id="toast-msg" class="text-[11px] text-slate-300">처리 되었습니다.</p>
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script>
+        // Initial Data Structure based on PRD
+        const DEFAULT_APP_STATE = {
+            user: {
+                name: "홍길동",
+                gradeClass: "1학년 2반",
+                points: 350,
+                savedFoodKg: 2.5
+            },
+            fridgeItems: [
+                { id: 1, name: "우유", category: "dairy", expiryDate: "2026-10-27", storage: "chilled" },
+                { id: 2, name: "계란 10구", category: "dairy", expiryDate: "2026-11-05", storage: "chilled" },
+                { id: 3, name: "돼지 목살", category: "meat", expiryDate: "2026-10-28", storage: "chilled" },
+                { id: 4, name: "자투리 당근", category: "vegetable", expiryDate: "2026-10-29", storage: "chilled" }
+            ],
+            schoolCertifications: [
+                { date: "2026-10-22", certified: true },
+                { date: "2026-10-23", certified: true },
+                { date: "2026-10-24", certified: true }
+            ]
+        };
+
+        let appData = JSON.parse(localStorage.getItem('zero_waste_app_data')) || DEFAULT_APP_STATE;
+        let currentFilter = 'all';
+
+        window.onload = function() {
+            // Default Today Date set to 2026-10-26
+            const dateInput = document.getElementById('input-date');
+            if (dateInput) dateInput.value = "2026-10-28";
+            
+            updateUI();
+            renderFridge();
+        };
+
+        function saveState() {
+            localStorage.setItem('zero_waste_app_data', JSON.stringify(appData));
+            updateUI();
+        }
+
+        function updateUI() {
+            // Calculate Stats
+            const savedKg = appData.user.savedFoodKg;
+            const co2Saved = (savedKg * 2.14).toFixed(2); // 1kg food waste = 2.14 kg CO2
+            const trees = (co2Saved / 6.6).toFixed(2);
+
+            document.getElementById('user-points').innerText = appData.user.points.toLocaleString();
+            document.getElementById('dash-food-kg').innerText = savedKg.toFixed(2);
+            document.getElementById('dash-co2').innerText = co2Saved;
+            document.getElementById('dash-trees').innerText = trees;
+            document.getElementById('dash-cert-count').innerText = appData.schoolCertifications.length;
+        }
+
+        // Tab Switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-emerald-600', 'text-white', 'shadow-sm');
+                btn.classList.add('text-slate-600', 'hover:bg-slate-100');
+            });
+
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-btn-${tabName}`);
+            activeBtn.classList.remove('text-slate-600', 'hover:bg-slate-100');
+            activeBtn.classList.add('bg-emerald-600', 'text-white', 'shadow-sm');
+        }
+
+        // D-Day & Traffic Light Calculator
+        function getDDayStatus(expiryDateStr) {
+            const today = new Date("2026-10-26"); // Reference Date in PRD
+            const expiry = new Date(expiryDateStr);
+            const diffTime = expiry - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays <= 2) {
+                return { dDay: diffDays, colorClass: 'border-rose-400 bg-rose-50/50', badgeClass: 'bg-rose-500 text-white', icon: '🔴 위험' };
+            } else if (diffDays <= 5) {
+                return { dDay: diffDays, colorClass: 'border-amber-400 bg-amber-50/50', badgeClass: 'bg-amber-500 text-white', icon: '🟡 주의' };
+            } else {
+                return { dDay: diffDays, colorClass: 'border-emerald-300 bg-emerald-50/30', badgeClass: 'bg-emerald-500 text-white', icon: '🟢 여유' };
+            }
+        }
+
+        // Render Fridge Items
+        function renderFridge() {
+            const grid = document.getElementById('fridge-grid');
+            const items = appData.fridgeItems.filter(item => currentFilter === 'all' || item.category === currentFilter);
+
+            if (items.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full border border-dashed border-slate-300 rounded-2xl p-8 text-center text-slate-400 text-xs">
+                        등록된 식재료가 없습니다. 상단의 '식재료 추가' 버튼을 눌러보세요!
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = items.map(item => {
+                const status = getDDayStatus(item.expiryDate);
+                const categoryNames = { dairy: '🥛 유제품', vegetable: '🥬 채소', meat: '🥩 육류', etc: '🥫 기타' };
+
+                return `
+                    <div class="bg-white p-4 rounded-2xl border-2 ${status.colorClass} shadow-sm flex flex-col justify-between space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${status.badgeClass}">${status.icon} D-${status.dDay >= 0 ? status.dDay : 'DAY 경과'}</span>
+                            <span class="text-[11px] text-slate-400">${item.storage === 'chilled' ? '냉장' : item.storage === 'frozen' ? '냉동' : '실온'}</span>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-base">${item.name}</h4>
+                            <p class="text-xs text-slate-500 mt-0.5">${categoryNames[item.category] || '기타'} | 소비기한: ${item.expiryDate}</p>
+                        </div>
+                        <div class="flex gap-2 pt-1 border-t border-slate-100">
+                            <button onclick="useIngredient(${item.id})" class="flex-1 bg-slate-100 hover:bg-emerald-100 hover:text-emerald-800 text-slate-700 text-xs font-bold py-1.5 rounded-lg transition-all">
+                                사용완료
+                            </button>
+                            <button onclick="useForRecipe('${item.name}')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-all">
+                                요리 추천
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Add Ingredient Modal Logic
+        function openAddModal() { document.getElementById('add-modal').classList.remove('hidden'); }
+        function closeAddModal() { document.getElementById('add-modal').classList.add('hidden'); }
+
+        function handleAddIngredient(e) {
+            e.preventDefault();
+            const name = document.getElementById('input-name').value;
+            const category = document.getElementById('input-category').value;
+            const storage = document.getElementById('input-storage').value;
+            const expiryDate = document.getElementById('input-date').value;
+
+            const newItem = {
+                id: Date.now(),
+                name,
+                category,
+                storage,
+                expiryDate
+            };
+
+            appData.fridgeItems.push(newItem);
+            saveState();
+            renderFridge();
+            closeAddModal();
+            showToast("식재료 등록 완료", `'${name}' 식재료가 성공적으로 등록되었습니다.`);
+        }
+
+        function filterFridge(cat) {
+            currentFilter = cat;
+            renderFridge();
+        }
+
+        function useIngredient(id) {
+            appData.fridgeItems = appData.fridgeItems.filter(i => i.id !== id);
+            appData.user.savedFoodKg += 0.3; // Add 300g saved
+            saveState();
+            renderFridge();
+            showToast("사용 완료!", "식재료를 알뜰히 소비하여 잔반 절감량 +0.3kg 반영되었습니다.");
+        }
+
+        // Meal Certification Logic
+        function certifyMeal() {
+            appData.user.points += 50;
+            appData.user.savedFoodKg += 0.4; // 400g saved
+            appData.schoolCertifications.push({ date: "2026-10-26", certified: true });
+            saveState();
+
+            const certBtn = document.getElementById('cert-btn');
+            certBtn.innerText = "오늘 인증 완료 ✓";
+            certBtn.disabled = true;
+            certBtn.className = "bg-slate-200 text-slate-500 font-bold px-6 py-2.5 rounded-xl text-xs cursor-default";
+
+            showToast("잔반 Zero 인증 성공!", "에코 포인트 +50P 획득 & 음식물 쓰레기 0.4kg 절감 완료!");
+        }
+
+        // Recipe AI Helper Trigger
+        function useForRecipe(itemName) {
+            switchTab('recipe');
+            document.getElementById('recipe-input').value = itemName;
+            getRecipe();
+        }
+
+        function getRecipe() {
+            const input = document.getElementById('recipe-input').value;
+            const resultBox = document.getElementById('recipe-result');
+
+            if (!input) {
+                alert("재료를 입력해 주세요!");
+                return;
+            }
+
+            resultBox.innerHTML = `
+                <div class="border border-emerald-200 bg-emerald-50/50 rounded-2xl p-5 space-y-3 text-xs">
+                    <div class="flex items-center justify-between">
+                        <span class="bg-emerald-600 text-white font-bold px-2.5 py-0.5 rounded-full text-[10px]">잔반 Zero 레시피</span>
+                        <span class="text-emerald-700 font-medium"><i class="fa-solid fa-leaf mr-1"></i>식재료 폐기 감소</span>
+                    </div>
+                    <h4 class="font-bold text-slate-800 text-sm">🌱 [${input}] 활용 '알뜰 모듬 볶음밥 & 자투리 전'</h4>
+                    <p class="text-slate-600 leading-relaxed">
+                        남아있는 <b>${input}</b>(을)를 잘게 다진 후, 계란 1개와 찬밥을 넣어 함께 볶아주세요. 간장과 참기름을 두르면 잔반 없는 훌륭한 요리가 완성됩니다.
+                    </p>
+                    <div class="bg-white p-3 rounded-xl border border-emerald-100 text-slate-500">
+                        <b>💡 보관 팁:</b> 소비기한이 얼마 남지 않은 식재료는 잘게 잘라 냉동 보관하면 최대 2주 이상 신선하게 활용 가능합니다.
+                    </div>
+                </div>
+            `;
+        }
+
+        // Toast Helper
+        function showToast(title, msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-title').innerText = title;
+            document.getElementById('toast-msg').innerText = msg;
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+                toast.classList.remove('translate-y-0', 'opacity-100');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
